@@ -1,0 +1,66 @@
+# Copyright 2021 u-blox
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#  http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+menu "AoA Tag"
+
+endmenu
+
+menu "Zephyr Kernel"
+source "Kconfig.zephyr"
+endmenu
+
+menu "AoA Tag"
+    config SEND_SENSOR_DATA_IN_PER_ADV_DATA
+        bool
+    prompt "Sensor data in periodic adv data"
+    help
+        "Send periodic advertising data containing sensor data."
+    default n
+
+    config ALLOW_REMOTE_AT_OVER_NUS
+        bool
+    prompt "Enable AT over NUS"
+    select BT_NUS
+    default n
+    help
+        "Add the NUS service and accept AT commands over it."
+
+    config PERIODIC_LED_BLINK
+        bool
+    prompt "Blink the blue"
+    help
+        "Periodically blink the blue LED  to indicate tag is running."
+    default y
+
+    config EXT_ADV_INT_MS_MIN
+        int
+    prompt "Minimum extended advertising interval in milliseconds."
+    help
+        "This is how often extended advertisements are sent, this is a tradeoff in power consumption and how fast/easy it is for the scanner to find the tag and initiate a periodic advertsing sync. to it."
+    default 250
+    range 32 16384
+
+    config EXT_ADV_INT_MS_MAX
+        int
+    prompt "Maximum extended advertising interval in milliseconds."
+    help
+        "This is how often extended advertisements are sent, this is a tradeoff in power consumption and how fast/easy it is for the scanner to find the tag and initiate a periodic advertsing sync. to it."
+    default EXT_ADV_INT_MS_MIN
+    range EXT_ADV_INT_MS_MIN 16384
+
+endmenu
+
+module = APPLICATION_MODULE
+module-str = AoA Tag
+source "subsys/logging/Kconfig.template.log_config"
